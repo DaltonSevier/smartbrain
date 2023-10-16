@@ -1,4 +1,4 @@
-#Smartbrain project frontend
+# Smartbrain project frontend
 
   This is only part of the final project for the smartbrain app.  The next project will be to add a backend to the app.
 
