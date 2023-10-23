@@ -13,10 +13,29 @@ import {
 
 function App() {
 
-  const [imageURL, setImageURL] = useState('https://samples.clarifai.com/metro-north.jpg')
+  const [imageURL, setImageURL] = useState('https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/03/GettyImages-1092658864_hero-1024x575.jpg?w=1155&h=1528')
   const [box, setBox] = useState({});
   const [route, setRoute] = useState('signin');
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [user, setUser] = useState({
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: ''
+  });
+
+  const loadUser = (data) => {
+    setUser(() => {
+      return {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined
+      }
+    })
+  }
 
   const calculateFaceLocation = (data) => {
     const bounding_box = data.outputs[0].data.regions[0].region_info.bounding_box
@@ -83,15 +102,26 @@ function App() {
     // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs
     // this will default to the latest version_id
 
-    // fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
-    //     .then(response => response.json())
-    //     .then(result => console.log(result.outputs[0].data.regions[0].region_info.bounding_box))
-    //     .catch(error => console.log('error', error));
-    // }
-
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
       .then(response => response.json())
       .then(result => calculateFaceLocation(result))
+      .then(() => {
+          fetch('http://localhost:3000/image', {
+            method: 'put',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: user.id
+            })
+          }).then(response => response.json())
+          .then(count => {
+            setUser(() => {
+              return {
+                ...user,
+                entries: count
+              }
+            })
+          })
+      })
       .catch(error => console.log('error', error));
   }
 
@@ -117,14 +147,14 @@ function App() {
         { route === 'home' ? 
           <div>
           <Logo />
-          <Rank />
+          <Rank name={user.name} entries={user.entries}/>
           <ImageLinkForm onInputChange={onInputChange} onButtonSubmit={onButtonSubmit}/>
           <FaceRecognition box={box} imageURL={imageURL}/>
         </div>
           : (
             route === 'signin' 
-            ? <Signin onRouteChange={onRouteChange}/>
-            : <Register onRouteChange={onRouteChange}/>
+            ? <Signin onRouteChange={onRouteChange} loadUser={loadUser}/>
+            : <Register onRouteChange={onRouteChange} loadUser={loadUser}/>
             ) 
         }
     </div>
