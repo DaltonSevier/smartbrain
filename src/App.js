@@ -61,11 +61,11 @@ function App() {
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Your PAT (Personal Access Token) can be found in the portal under Authentification
-    const PAT = 'ENTER_PAT_KEY';
+    const PAT = 'ENTER YOUR PAT HERE';
     // Specify the correct user_id/app_id pairings
     // Since you're making inferences outside your app's scope
-    const USER_ID = 'ENTER_USER_ID';
-    const APP_ID = 'ENTER_APP_ID';
+    const USER_ID = 'ENTER YOUR USER ID HERE';
+    const APP_ID = 'ENTER YOUR APP ID HERE';
     // Change these to whatever model and image URL you want to use
     const MODEL_ID = 'face-detection';
     const MODEL_VERSION_ID = '6dc7e46bc9124c5c8824be4822abe105';

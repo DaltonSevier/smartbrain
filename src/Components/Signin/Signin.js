@@ -21,9 +21,9 @@ const Signin = ({onRouteChange, loadUser}) => {
                 password: signInPassword
             })
         }).then(response => response.json())
-        .then(data => {
-            if(data.id){
-                loadUser(data);
+        .then(user => {
+            if(user.id){
+                loadUser(user);
                 onRouteChange('home')
             }
         })
